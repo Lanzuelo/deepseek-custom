@@ -52,6 +52,8 @@ Desktop microphone access is restricted to audio requests from the primary `dsh-
 
 Press F12 (Fn+F12 on media-key keyboards), Command+Option+I on macOS, or Ctrl+Shift+I on Windows to toggle DevTools for the focused application page, including in packaged builds. These native shortcuts use hidden application-menu items. Update overlays and packaged embedded browser guests disable DevTools.
 
+Chat mode embeds the official `https://chat.deepseek.com` document in a sandboxed `WebContentsView` created only when the user selects Chat. The view has no preload, no Node integration, its own persistent partition per local account, deny-all permission handlers, and an allowlist for that single origin; every other link opens in the operating system browser. Harness never reads the page: the trusted renderer supplies the viewport rectangle and toolbar commands through private IPC, and the account registry is a non-secret JSON file under Electron userData. Deleting an account records its partition before clearing it, so an interrupted cleanup resumes on the next launch. The view is destroyed on mode exit, owner navigation, renderer death, quit, and installer handoff.
+
 <a id="terminal-command"></a>
 
 ## Terminal command

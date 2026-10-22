@@ -52,6 +52,8 @@ Desktop Host 的 Platform API 请求与更新策略请求用相同的 Platform �
 
 按 F12（多媒体功能键键盘上为 Fn+F12）、macOS 的 Command+Option+I 或 Windows 的 Ctrl+Shift+I，可切换当前获得焦点的应用页面的 DevTools，打包版本同样支持。这些原生快捷键通过隐藏的应用菜单项注册。更新遮罩和打包版本的内嵌浏览器禁用 DevTools。
 
+聊天模式仅在用户选择“聊天”时创建沙箱化的 `WebContentsView`，用于内嵌官方 `https://chat.deepseek.com` 文档。该视图没有 preload、没有 Node 集成，每个本地账户使用独立的持久分区，权限处理器全部拒绝，并且只允许这一个来源；其它链接在系统浏览器中打开。Harness 从不读取页面内容：受信任的渲染器通过私有 IPC 提供视口矩形与工具栏命令，账户注册表是 Electron userData 下不含机密的 JSON 文件。删除账户会先记录分区再执行清理，因此被中断的清理会在下次启动时继续。退出模式、所属页面导航、渲染进程退出、退出应用与安装器接管时都会销毁该视图。
+
 <a id="terminal-command"></a>
 
 ## 终端命令

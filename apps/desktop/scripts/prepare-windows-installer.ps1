@@ -13,10 +13,14 @@ if (-not (Test-Path -LiteralPath $vswhere)) { throw 'Windows installer preparati
 $visualStudio = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
 if (-not $visualStudio) { throw 'Visual Studio C++ Build Tools are missing.' }
 $vcvars = Join-Path $visualStudio 'VC/Auxiliary/Build/vcvars32.bat'
-$compileScript = Join-Path $output 'compile-frame.cmd'
-$compileLines = @('@echo off', ('call "{0}" >nul' -f $vcvars), 'if errorlevel 1 exit /b %errorlevel%', ('cl /nologo /LD /MT /O1 /W4 /WX /EHsc "{0}" /Fo"{1}" /link /OUT:"{2}" /IMPLIB:"{3}" user32.lib comctl32.lib dwmapi.lib gdiplus.lib ole32.lib shell32.lib uuid.lib advapi32.lib' -f $source, (Join-Path $output 'window-frame.obj'), $library, (Join-Path $output 'window-frame.lib')))
-[IO.File]::WriteAllLines($compileScript, $compileLines, [Text.Encoding]::Default)
-& $env:ComSpec /d /c $compileScript
+# Compile directly rather than through a generated .cmd: cmd.exe reads that file in the OEM code page,
+# which corrupts a non-ASCII repository path before cl.exe ever sees it.
+$envLines = & $env:ComSpec /d /c "`"$vcvars`" >nul 2>&1 && set"
+if ($LASTEXITCODE -ne 0) { throw 'Visual Studio environment initialization failed.' }
+foreach ($line in $envLines) {
+    if ($line -match '^([^=]+)=(.*)$') { [Environment]::SetEnvironmentVariable($matches[1], $matches[2], 'Process') }
+}
+& cl /nologo /LD /MT /O1 /W4 /WX /EHsc $source /Fo"$output\window-frame.obj" /link /OUT:"$library" /IMPLIB:"$output\window-frame.lib" user32.lib comctl32.lib dwmapi.lib gdiplus.lib ole32.lib shell32.lib uuid.lib advapi32.lib
 if ($LASTEXITCODE -ne 0) { throw 'Native installer helper compilation failed.' }
 if ($TestProgress -or $CompileProgressOnly) {
     $cleanupSource = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../tests/windows-uninstall-data.cpp'))

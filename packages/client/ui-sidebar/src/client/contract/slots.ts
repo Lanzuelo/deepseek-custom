@@ -29,6 +29,13 @@ declare module '@deepseek-ai/dsh-client-ui-slots' {
      */
     'sidebar.brand.name': { kind: 'single'; scope: 'root'; owner: SidebarBrandNameOwnerProps }
     /**
+     * Optional mode selector between the brand row and New Session: the
+     * desktop Agent/Chat switch. Declared by this package's 'sidebar' entry;
+     * the row renders only while at least one occupant is registered, so a
+     * deployment without a mode capability keeps the untouched shell.
+     */
+    'sidebar.mode': { kind: 'list'; scope: 'root'; owner: SidebarModeOwnerProps }
+    /**
      * Global panel icons. Each list id addresses the matching main panel;
      * the sidebar owns the button and resolves its label from list metadata.
      */
@@ -110,6 +117,12 @@ export interface SidebarFooterActionOwnerProps {
   wide: boolean
 }
 
+/** Owner share of the optional mode selector between the brand row and New Session. */
+export interface SidebarModeOwnerProps {
+  /** Whether the sidebar renders wide content; the rail hides the mode row. */
+  wide: boolean
+}
+
 /**
  * Registrant-private injected share (arrives via the register inject
  * factory). The renderer binds the panel metadata source to usePanels.
@@ -126,7 +139,12 @@ export type SidebarRootInjected = {
   /** Select the global panel addressed by a sidebar row. */
   selectPanel: (id: MainPanelId) => void
   /** Private reactive sources bound to framework selector hooks. */
-  hooks: { panels: ObservableSnapshot<readonly SidebarPanelMetadata[]>; shortcuts: ObservableSnapshot<readonly ShortcutCatalogEntry[]> }
+  hooks: {
+    panels: ObservableSnapshot<readonly SidebarPanelMetadata[]>
+    shortcuts: ObservableSnapshot<readonly ShortcutCatalogEntry[]>
+    /** Whether any `sidebar.mode` occupant is registered. */
+    mode: ObservableSnapshot<boolean>
+  }
 }
 
 /**
@@ -140,6 +158,7 @@ export type SidebarRootComponentProps =
     | 'sidebar.brand.mark'
     | 'sidebar.brand.name'
     | 'sidebar.toggle.badge'
+    | 'sidebar.mode'
     | 'sidebar.panellist'
     | 'sidebar.workspaces'
     | 'sidebar.settings'

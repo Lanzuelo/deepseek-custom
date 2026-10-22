@@ -1,0 +1,34 @@
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write packages/client/ui-chat-mode/README.md
+/:
+  en: 9f193baae4e00d0c
+  zh: c94c34b5d6469543
+/deepseek-ai-dsh-client-ui-chat-mode:
+  en: acc61d5fd168cf51
+  zh: 509210658740d6c3
+/deepseek-ai-dsh-client-ui-chat-mode/summary:
+  en: 8731ae9ce553c4c9
+  zh: 4c4e6dd6367b0b72
+/deepseek-ai-dsh-client-ui-chat-mode/table-of-contents:
+  en: e6747830a09a09aa
+  zh: 37282674c269d6b2
+/deepseek-ai-dsh-client-ui-chat-mode/use-this-package:
+  en: 4a12b28992001a5e
+  zh: a672867cad435f2b
+/deepseek-ai-dsh-client-ui-chat-mode/understand-the-implementation:
+  en: d19d4819bc3f6634
+  zh: e57ed1dfee5c764d
+/deepseek-ai-dsh-client-ui-chat-mode/further-exploration:
+  en: 5d50ade0d5728893
+  zh: 9b9b74b2dac4e52e
+/deepseek-ai-dsh-client-ui-chat-mode/model-experience:
+  en: 32414b66b1654bac
+  zh: 332e5fdedf9f917c
+/deepseek-ai-dsh-client-ui-chat-mode/model-experience/kv-cache-effect:
+  en: ca3015e252db0114
+  zh: d187c6e8c66e69cb
+/deepseek-ai-dsh-client-ui-chat-mode/known-limitations-and-deferred-work:
+  en: 5472229095c94db4
+  zh: 3e19c812fd90ee19

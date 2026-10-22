@@ -1,0 +1,106 @@
+/** `chatMode` namespace dictionaries: mode switch, chat shell, and API balance. */
+import type {} from '@deepseek-ai/dsh-client-ui-slots'
+
+declare module '@deepseek-ai/dsh-client-ui-slots' {
+  interface LocaleNamespaceMap {
+    /** Agent/Chat mode copy and API balance labels. */
+    chatMode: ChatModeKey
+  }
+}
+
+/** Simplified Chinese dictionary (the key-set source of truth). */
+export const zh = {
+  'mode.label': '模式',
+  'mode.agent': '智能体',
+  'mode.chat': '聊天',
+  'chat.back': '后退',
+  'chat.forward': '前进',
+  'chat.reload': '重新加载',
+  'chat.openExternal': '在浏览器中打开',
+  'chat.loading': '正在加载 DeepSeek 聊天…',
+  'chat.error.network': '无法加载 DeepSeek 聊天。请检查网络连接后重试。',
+  'chat.error.crashed': '聊天页面已意外停止。',
+  'chat.error.unavailable': '无法在此处打开 DeepSeek 聊天。',
+  'chat.retry': '重试',
+  'chat.web.title': '聊天模式需要桌面应用',
+  'chat.web.body': '浏览器版本无法安全地内嵌 DeepSeek 网站。请在桌面应用中使用聊天模式，或在浏览器中访问 chat.deepseek.com。',
+  'chat.web.action': '在浏览器中打开 DeepSeek',
+  'chat.account': '聊天账户',
+  'chat.profiles': '本地账户',
+  'chat.profile.new': '新建账户',
+  'chat.profile.rename': '重命名',
+  'chat.profile.save': '保存',
+  'chat.profile.cancel': '取消',
+  'chat.profile.clear': '清除本地登录',
+  'chat.profile.delete': '删除账户',
+  'chat.profile.deleteConfirm': '删除“{name}”及其本地浏览器数据？网站上的对话不会被删除。',
+  'chat.profile.clearConfirm': '清除“{name}”在此设备上的登录和网站数据？',
+  'chat.profile.confirm': '删除',
+  'chat.profile.name': '账户名称',
+  'chat.profile.defaultLabel': 'DeepSeek',
+  'balance.label': 'API 余额',
+  'balance.loading': '正在读取余额…',
+  'balance.missingKey': '未配置 API 密钥',
+  'balance.unsupported': '此端点不提供余额',
+  'balance.error.auth': 'API 密钥被拒绝',
+  'balance.error.network': '无法连接余额端点',
+  'balance.error.timeout': '余额请求超时',
+  'balance.error.malformed': '余额响应无效',
+  'balance.error.storage': '无法读取密钥存储',
+  'balance.unavailable': '余额不可用',
+  'balance.updated': '更新于 {time}',
+  'balance.refresh': '刷新',
+  'balance.total': '总余额',
+  'balance.granted': '赠送',
+  'balance.toppedUp': '充值',
+} satisfies Record<string, string>
+
+/** The chatMode namespace key union. */
+export type ChatModeKey = keyof typeof zh
+
+/** English dictionary, checked complete against the zh key set. */
+export const en = {
+  'mode.label': 'Mode',
+  'mode.agent': 'Agent',
+  'mode.chat': 'Chat',
+  'chat.back': 'Back',
+  'chat.forward': 'Forward',
+  'chat.reload': 'Reload',
+  'chat.openExternal': 'Open in browser',
+  'chat.loading': 'Loading DeepSeek Chat…',
+  'chat.error.network': 'DeepSeek Chat could not load. Check the connection and retry.',
+  'chat.error.crashed': 'The chat page stopped unexpectedly.',
+  'chat.error.unavailable': 'DeepSeek Chat cannot open here.',
+  'chat.retry': 'Retry',
+  'chat.web.title': 'Chat needs the desktop app',
+  'chat.web.body': 'The browser build cannot safely embed the DeepSeek site. Use Chat in the desktop app, or visit chat.deepseek.com in your browser.',
+  'chat.web.action': 'Open DeepSeek in browser',
+  'chat.account': 'Chat account',
+  'chat.profiles': 'Local accounts',
+  'chat.profile.new': 'New account',
+  'chat.profile.rename': 'Rename',
+  'chat.profile.save': 'Save',
+  'chat.profile.cancel': 'Cancel',
+  'chat.profile.clear': 'Clear local sign-in',
+  'chat.profile.delete': 'Delete account',
+  'chat.profile.deleteConfirm': 'Delete “{name}” and its local browser data? Conversations on the site are not deleted.',
+  'chat.profile.clearConfirm': 'Clear the sign-in and site data for “{name}” on this device?',
+  'chat.profile.confirm': 'Delete',
+  'chat.profile.name': 'Account name',
+  'chat.profile.defaultLabel': 'DeepSeek',
+  'balance.label': 'API balance',
+  'balance.loading': 'Reading balance…',
+  'balance.missingKey': 'No API key configured',
+  'balance.unsupported': 'This endpoint has no balance',
+  'balance.error.auth': 'The API key was rejected',
+  'balance.error.network': 'The balance endpoint is unreachable',
+  'balance.error.timeout': 'The balance request timed out',
+  'balance.error.malformed': 'The balance response was invalid',
+  'balance.error.storage': 'The credential store is unreadable',
+  'balance.unavailable': 'Balance unavailable',
+  'balance.updated': 'Updated {time}',
+  'balance.refresh': 'Refresh',
+  'balance.total': 'Total',
+  'balance.granted': 'Granted',
+  'balance.toppedUp': 'Topped up',
+} satisfies Record<ChatModeKey, string> satisfies Record<ChatModeKey, string>

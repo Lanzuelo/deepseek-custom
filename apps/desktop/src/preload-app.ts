@@ -4,11 +4,36 @@ import type { DesktopShortcutInput, ShortcutConfigSnapshot, ShortcutSaveResult }
 import { contextBridge, ipcRenderer, webUtils } from 'electron'
 import { DESKTOP_IPC, SCHEME, type DshDesktopProductApi, type DesktopUpdatePresentation } from './ipc.ts'
 import { PLATFORM_IPC } from './platform-ipc.ts'
+import { CHAT_IPC, type ChatBounds, type ChatViewSnapshot } from './chat-view-ipc.ts'
 import { markDocumentPlatform, syncWindowFullscreen } from './preload-platform.ts'
 import { syncNativeTheme } from './preload-theme.ts'
 import { syncWindowsAppearance } from './preload-windows.ts'
 import { installMandatoryUpdateOverlay } from './preload-mandatory-overlay.ts'
 import { createDesktopBrowserBridge } from './preload-browser.ts'
+
+function createChatBridge() {
+  const command = (channel: string, ...args: unknown[]): Promise<unknown> => ipcRenderer.invoke(channel, ...args)
+  return {
+    snapshot: () => command(CHAT_IPC.snapshot) as Promise<ChatViewSnapshot>,
+    open: (profileId: string | null, bounds: ChatBounds) => command(CHAT_IPC.open, profileId, bounds) as Promise<ChatViewSnapshot>,
+    close: () => command(CHAT_IPC.close) as Promise<void>,
+    setBounds: (bounds: ChatBounds) => command(CHAT_IPC.bounds, bounds) as Promise<void>,
+    reload: () => command(CHAT_IPC.reload) as Promise<void>,
+    back: () => command(CHAT_IPC.back) as Promise<void>,
+    forward: () => command(CHAT_IPC.forward) as Promise<void>,
+    openExternal: () => command(CHAT_IPC.openExternal) as Promise<void>,
+    createProfile: (label: string) => command(CHAT_IPC.createProfile, label) as Promise<ChatViewSnapshot>,
+    selectProfile: (id: string) => command(CHAT_IPC.selectProfile, id) as Promise<ChatViewSnapshot>,
+    renameProfile: (id: string, label: string) => command(CHAT_IPC.renameProfile, id, label) as Promise<ChatViewSnapshot>,
+    deleteProfile: (id: string) => command(CHAT_IPC.deleteProfile, id) as Promise<ChatViewSnapshot>,
+    clearProfile: (id: string) => command(CHAT_IPC.clearProfile, id) as Promise<ChatViewSnapshot>,
+    subscribe(listener: (state: ChatViewSnapshot) => void): () => void {
+      const handle = (_event: Electron.IpcRendererEvent, state: ChatViewSnapshot): void => { listener(state) }
+      ipcRenderer.on(CHAT_IPC.state, handle)
+      return () => { ipcRenderer.off(CHAT_IPC.state, handle) }
+    },
+  }
+}
 
 function createProductApi(): DshDesktopProductApi {
   return {
@@ -91,6 +116,7 @@ if (location.protocol === `${SCHEME}:` && location.hostname === 'app') {
     setBounds: (bounds: { x: number; y: number; width: number; height: number }) => ipcRenderer.invoke(PLATFORM_IPC.bounds, bounds),
     close: () => ipcRenderer.invoke(PLATFORM_IPC.close),
   })
+  if (process.isMainFrame) contextBridge.exposeInMainWorld('dshChat', createChatBridge())
 }
 
 markDocumentPlatform()

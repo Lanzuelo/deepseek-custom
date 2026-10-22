@@ -239,6 +239,14 @@
   overflow: visible;
 }
 
+/* Optional Agent/Chat selector: a full-width row between the brand and New
+   Session. The shell renders it only while an occupant is registered. */
+.modeRow {
+  flex: none;
+  box-sizing: border-box;
+  padding: 0 8px 8px;
+}
+
 /* Brand group (figma I133:7632): the full wordmark rides the text ink
    (figma flows: the main-screen instance is black; blue is brand
    emphasis only). A button only in behavior (New Session shortcut): the

@@ -94,10 +94,12 @@ export function SidebarRoot({
   usePanels,
   useShortcuts,
   usePanelInfo,
+  useMode,
   t,
   renderSlot,
 }: SidebarRootComponentProps) {
   const panels = usePanels(snapshot => snapshot)
+  const modeShown = useMode(value => value)
   const shortcut = useShortcuts(rows => rows.find(row => row.id === 'sidebar.left.toggle'))
   const newShortcut = useShortcuts(rows => rows.find(row => row.id === 'session.new'))
   const toggleLabel = collapsed ? t('toggle.open') : t('toggle.collapse')
@@ -254,6 +256,12 @@ export function SidebarRoot({
         })()}
         {!darwinDesktop && toggle}
       </div>
+
+      {/* The optional mode selector sits below the brand row and above New
+          Session; a deployment without an occupant renders no row at all. */}
+      {wide && modeShown && (
+        <div className={clsx(css.modeRow, css.wide)}>{renderSlot('sidebar.mode', { wide })}</div>
+      )}
 
       {/* The label fades before the hover/focus shortcut, including on translucent backgrounds. */}
       <Tooltip label={t('session.new.label')} shortcutKeys={newShortcut?.keys} delayMs={500} side={captionTooltipSide} disabled={wide}>

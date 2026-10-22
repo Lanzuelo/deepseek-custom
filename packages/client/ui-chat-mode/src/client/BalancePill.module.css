@@ -1,0 +1,110 @@
+/* Composer status-row balance reading: one compact non-shrinking line. */
+
+.anchor {
+  position: relative;
+  display: inline-flex;
+  min-width: 0;
+  font-size: calc(var(--dsh-content-font-size-secondary, 13px) - 1px);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  min-height: 20px;
+  padding: 1px 8px;
+  border: 0;
+  border-radius: var(--dsw-radius-sm);
+  background: transparent;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: inherit;
+  font-variant-numeric: tabular-nums;
+  line-height: 18px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.pill:hover,
+.pill:focus-visible {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-secondary);
+}
+
+.pill:focus-visible {
+  outline: var(--dsw-focus-ring-width) solid var(--dsw-focus-ring-color, var(--dsw-alias-state-business-primary));
+  outline-offset: -2px;
+}
+
+.label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 6px);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 240px;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 0;
+  border-radius: var(--dsw-radius-lg);
+  background: var(--dsw-specific-menu);
+  backdrop-filter: var(--dsw-menu-backdrop-filter);
+  box-shadow: var(--dsw-elevation-prominent);
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12px;
+  line-height: 18px;
+  white-space: normal;
+  cursor: default;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.panelTitle {
+  color: var(--dsw-alias-label-primary);
+  font-weight: 500;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 12px;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.details dt {
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.details dd {
+  margin: 0;
+  text-align: right;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.total {
+  color: var(--dsw-alias-label-primary);
+  font-weight: 500;
+}
+
+.warning {
+  margin: 0;
+  color: var(--dsw-alias-state-business-primary);
+}
+
+.updated {
+  margin: 0;
+  color: var(--dsw-alias-label-tertiary);
+}

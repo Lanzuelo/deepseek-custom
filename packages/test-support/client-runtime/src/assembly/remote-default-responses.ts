@@ -40,6 +40,9 @@ export const remoteDefaultResponses: RemoteTable = {
     // ui-settings-account bonus notice read and acknowledgement at signing in.
     'account/getUnnotifiedBonuses': ok(null),
     'account/ackBonusNotified': ok(true),
+    // ui-chat-mode balance pill on the first composer mount.
+    'deepseekBalance/read': ok({ status: 'missing-key' }),
+    'deepseekBalance/refresh': ok({ status: 'missing-key' }),
   },
   // Stream endpoints the roster opens later than boot; declared so a spec that forgets the script gets a stream miss.
   streams: [

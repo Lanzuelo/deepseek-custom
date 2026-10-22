@@ -8,6 +8,8 @@ DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的�
 
 文档：[https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/)
 
+> **非官方 DeepSeek Custom 分支。** 本分支为桌面应用增加了“智能体 / 聊天”模式与 API 余额显示。功能概览、安装、构建步骤与安全限制见[英文概览](CUSTOM.md) 或 [中文概览](CUSTOM.zh.md)。本项目不属于 DeepSeek AI，也未获得其认可。
+
 ## 开发者预览
 
 DeepSeek Harness 处于 _开发者预览_ 阶段，正在快速迭代。**未来将出现破坏兼容性的变更。**

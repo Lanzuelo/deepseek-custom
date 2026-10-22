@@ -835,6 +835,28 @@ export interface Config {
 ```
 <!-- END GENERATED config-catalog:@deepseek-ai/dsh-deepseek-account-platform -->
 
+<!-- BEGIN GENERATED config-catalog:@deepseek-ai/dsh-deepseek-balance -->
+<a id="deepseek-aidsh-deepseek-balance"></a>
+
+## `@deepseek-ai/dsh-deepseek-balance`
+
+- `source`: [`packages/llm/deepseek-balance/src/index.ts:22`](../packages/llm/deepseek-balance/src/index.ts)
+
+```ts config-catalog
+/** Deployment choices for the balance reader. */
+export interface Config {
+  /** Endpoint origin; an origin other than the documented one reports `unsupported`. */
+  baseUrl?: string
+  /** Credential reference resolved per read; a provider base URL setting overrides it. */
+  apiKeyEnv?: string
+  /** Deadline for one balance request. */
+  requestTimeoutMs?: number
+  /** How long a ready reading is reused before it is refreshed. */
+  cacheTtlMs?: number
+}
+```
+<!-- END GENERATED config-catalog:@deepseek-ai/dsh-deepseek-balance -->
+
 <!-- BEGIN GENERATED config-catalog:@deepseek-ai/dsh-experimental-agent-team -->
 <a id="deepseek-aidsh-experimental-agent-team"></a>
 
@@ -4606,6 +4628,7 @@ These load from a `cordis.yml` entry with no `config:` block; they declare no co
 | `@deepseek-ai/dsh-client-ui-attachment` | — | [`packages/client/ui-attachment/src/index.ts`](../packages/client/ui-attachment/src/index.ts) |
 | `@deepseek-ai/dsh-client-ui-brand-official` | — | [`packages/client/ui-brand-official/src/index.ts`](../packages/client/ui-brand-official/src/index.ts) |
 | `@deepseek-ai/dsh-client-ui-chat` | — | [`packages/client/ui-chat/src/index.ts`](../packages/client/ui-chat/src/index.ts) |
+| `@deepseek-ai/dsh-client-ui-chat-mode` | — | [`packages/client/ui-chat-mode/src/index.ts`](../packages/client/ui-chat-mode/src/index.ts) |
 | `@deepseek-ai/dsh-client-ui-commands` | — | [`packages/client/ui-commands/src/index.ts`](../packages/client/ui-commands/src/index.ts) |
 | `@deepseek-ai/dsh-client-ui-conversation` | — | [`packages/client/ui-conversation/src/index.ts`](../packages/client/ui-conversation/src/index.ts) |
 | `@deepseek-ai/dsh-client-ui-cordis` | — | [`packages/extensions/ui-cordis/src/index.ts`](../packages/extensions/ui-cordis/src/index.ts) |

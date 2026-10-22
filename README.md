@@ -8,6 +8,8 @@ It is built on an **everything-is-a-plugin** architecture and powered by [Cordis
 
 Documentation: [https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/)
 
+> **Unofficial DeepSeek Custom fork.** This branch adds Agent/Chat modes and an API balance reading to the Desktop application. See the [English overview](CUSTOM.md) or the [Chinese overview](CUSTOM.zh.md) for the feature overview, installation, build steps, and security limits. It is not affiliated with or endorsed by DeepSeek AI.
+
 ## Developer preview
 
 DeepSeek Harness is in _developer preview_ and iterating rapidly. **THERE WILL BE COMPATIBILITY-BREAKING CHANGES.**

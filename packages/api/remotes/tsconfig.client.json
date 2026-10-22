@@ -61,6 +61,9 @@
       "path": "../../llm/llm"
     },
     {
+      "path": "../../llm/deepseek-balance"
+    },
+    {
       "path": "../../preset/agent-preset-registry"
     },
     {

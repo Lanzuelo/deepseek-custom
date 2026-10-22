@@ -61,6 +61,11 @@ export function apply(ctx: ClientContext): void {
   }
   ctx.effect(() => ctx.slots.subscribe('sidebar.panellist', syncPanels), 'ui-sidebar: panel entries')
   ctx.effect(() => ctx.locale.subscribe(syncPanels), 'ui-sidebar: panel labels')
+  // The optional mode row exists only while a plugin claims it, so the shell
+  // without such a capability renders exactly the previous DOM.
+  const mode = createSnapshotStore(false)
+  const syncMode = (): void => { mode.set(ctx.slots.entriesOfSlot('sidebar.mode').length > 0) }
+  ctx.effect(() => ctx.slots.subscribe('sidebar.mode', syncMode), 'ui-sidebar: mode entries')
 
   const injectProps = (): SidebarRootInjected => ({
     // The shell's New Session button rides the Workspace UI's shared action
@@ -71,7 +76,7 @@ export function apply(ctx: ClientContext): void {
       if (id === 'plugins' || id === 'schedules') ctx.get('productAnalytics')?.track('sidebar_menu_click', { menu_name: id === 'plugins' ? 'plugin' : 'cron' })
       ctx.layout.selectPanel(id)
     },
-    hooks: { panels, shortcuts: ctx.shortcuts.catalog },
+    hooks: { panels, shortcuts: ctx.shortcuts.catalog, mode },
   })
   ctx.slots.inject('sidebar', () => ctx.slots.register({
     name: 'sidebar',
@@ -80,6 +85,7 @@ export function apply(ctx: ClientContext): void {
       'sidebar.brand.mark': { kind: 'single', scope: 'root' },
       'sidebar.brand.name': { kind: 'single', scope: 'root' },
       'sidebar.toggle.badge': { kind: 'single', scope: 'root' },
+      'sidebar.mode': { kind: 'list', scope: 'root' },
       'sidebar.panellist': { kind: 'list', scope: 'root' },
       'sidebar.workspaces': { kind: 'single', scope: 'root' },
       'sidebar.settings': { kind: 'single', scope: 'root' },
@@ -97,4 +103,5 @@ export function apply(ctx: ClientContext): void {
     inject: injectProps,
   }, HeaderLeadingControls))
   syncPanels()
+  syncMode()
 }

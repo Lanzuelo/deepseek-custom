@@ -26,6 +26,8 @@ import { resolveDesktopPaths } from './paths.ts'
 import { DesktopProjectManager } from './project-manager.ts'
 import { DesktopHostFatalError, DesktopHostProcess, DesktopHostUncleanExitError } from './host-process.ts'
 import { DesktopPlatformView, PLATFORM_IPC, platformBounds } from './platform-view.ts'
+import { DesktopChatView, chatBounds } from './chat-view.ts'
+import { CHAT_IPC } from './chat-view-ipc.ts'
 import { installDesktopDirectoryPicker } from './directory-picker.ts'
 import { installMicrophonePermissions } from './microphone-permissions.ts'
 import { DesktopBackendController } from './backend-controller.ts'
@@ -442,6 +444,9 @@ async function main(): Promise<void> {
   }
   const platformView = new DesktopPlatformView(join(app.getAppPath(), 'lib', 'preload-platform-account.cjs'),
     () => locale.id === 'zh-CN' ? 'zh_CN' : 'en_US', process.platform === 'win32' ? 'win32' : 'darwin')
+  // The embedded Chat document needs no Host credential stream or preload; it
+  // keeps only per-profile browser storage under Electron userData.
+  const chatView = new DesktopChatView(join(app.getPath('userData'), 'chat-profiles.json'), { devTools: !app.isPackaged })
   const backend = new DesktopBackendController((onFailure) => {
     const hostInspectPort = developmentHostInspectPort(development)
     const host = new DesktopHostProcess(resources.node, resources.dsh, activeProject,
@@ -745,6 +750,38 @@ async function main(): Promise<void> {
     platformView.setBounds(platformBounds(bounds))
   })
   ipcMain.handle(PLATFORM_IPC.close, (event) => { assertMainApplication(event); platformView.close() })
+  const chatOwner = (event: IpcMainInvokeEvent): BrowserWindow => {
+    assertProductSender(event)
+    const owner = mainWindow
+    if (owner === undefined || owner.isDestroyed()) throw new Error('Chat owner unavailable')
+    return owner
+  }
+  ipcMain.handle(CHAT_IPC.snapshot, async (event) => { assertProductSender(event); return chatView.state() })
+  ipcMain.handle(CHAT_IPC.open, async (event, profileId: unknown, bounds: unknown) => {
+    const owner = chatOwner(event)
+    if (profileId !== null && typeof profileId !== 'string') throw new Error('Invalid chat profile')
+    return chatView.open(owner, profileId, chatBounds(bounds))
+  })
+  ipcMain.handle(CHAT_IPC.bounds, (event, bounds: unknown) => {
+    assertProductSender(event)
+    chatView.setBounds(chatBounds(bounds))
+  })
+  ipcMain.handle(CHAT_IPC.close, (event) => { assertProductSender(event); chatView.close() })
+  ipcMain.handle(CHAT_IPC.reload, (event) => { assertProductSender(event); chatView.reload() })
+  ipcMain.handle(CHAT_IPC.back, (event) => { assertProductSender(event); chatView.goBack() })
+  ipcMain.handle(CHAT_IPC.forward, (event) => { assertProductSender(event); chatView.goForward() })
+  ipcMain.handle(CHAT_IPC.openExternal, async (event) => { assertProductSender(event); await chatView.openExternal() })
+  ipcMain.handle(CHAT_IPC.createProfile, async (event, label: unknown) => {
+    assertProductSender(event)
+    return chatView.createProfile(label)
+  })
+  ipcMain.handle(CHAT_IPC.selectProfile, async (event, id: unknown) => { assertProductSender(event); return chatView.selectProfile(id) })
+  ipcMain.handle(CHAT_IPC.renameProfile, async (event, id: unknown, label: unknown) => {
+    assertProductSender(event)
+    return chatView.renameProfile(id, label)
+  })
+  ipcMain.handle(CHAT_IPC.deleteProfile, async (event, id: unknown) => { assertProductSender(event); return chatView.deleteProfile(id) })
+  ipcMain.handle(CHAT_IPC.clearProfile, async (event, id: unknown) => { assertProductSender(event); return chatView.clearProfile(id) })
   // Only the main window may synchronize its palette with the native material.
   ipcMain.on(DESKTOP_IPC.nativeThemeSet, (event, source: unknown) => {
     if (mainWindow === undefined || event.sender !== mainWindow.webContents) return
@@ -932,7 +969,7 @@ async function main(): Promise<void> {
   const applicationIconPath = development ? join(app.getAppPath(), 'resources', 'icon-windows.png')
     : join(process.resourcesPath, 'icon.png')
   app.setAboutPanelOptions({
-    applicationName: 'DeepSeek Harness',
+    applicationName: currentDesktopLocale().messages.aboutProduct,
     applicationVersion: app.getVersion(),
     // The release has no separate build number; omit Electron's bundle version.
     version: '',
@@ -1260,7 +1297,8 @@ async function main(): Promise<void> {
     mandatoryUI?.dispose()
     void Promise.all([Promise.resolve(mandatoryPolicy?.dispose()).then(() => policyAuth?.dispose()), backend.close(),
       // A Platform cleanup failure is logged without cutting the remaining Host shutdown short.
-      platformView.dispose().catch((error: unknown) => { console.error(error) })])
+      platformView.dispose().catch((error: unknown) => { console.error(error) }),
+      chatView.dispose().catch((error: unknown) => { console.error(error) })])
       .catch((error: unknown) => { console.error(error) }).finally(() => { app.quit() })
   }
   app.on('before-quit', (event) => {
@@ -1274,6 +1312,7 @@ async function main(): Promise<void> {
       mandatoryUI?.dispose()
       // Installation preparation already awaited Platform storage cleanup.
       void platformView.dispose().catch((error: unknown) => { console.error(error) })
+      void chatView.dispose().catch((error: unknown) => { console.error(error) })
       return
     }
     if (quitting) return

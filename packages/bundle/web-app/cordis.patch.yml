@@ -147,6 +147,10 @@
     - id: account-controller
       name: '@deepseek-ai/dsh-api-account-controller'
 
+    # Host-only DeepSeek API wallet read behind the composer balance pill.
+    - id: deepseek-balance
+      name: '@deepseek-ai/dsh-deepseek-balance'
+
     - id: settings-controller
       name: '@deepseek-ai/dsh-api-settings-controller'
 
@@ -401,6 +405,11 @@
     # Goal surface: GoalBar in the input dock over the goal session projection.
     - id: ui-goal
       name: '@deepseek-ai/dsh-client-ui-goal'
+
+    # Agent/Chat mode: the sidebar selector, the Desktop-only embedded official
+    # chat surface, and the API balance reading in the agent status row.
+    - id: ui-chat-mode
+      name: '@deepseek-ai/dsh-client-ui-chat-mode'
 
     # The feedback surface: Like/Dislike in the assistant-message action
     # strip, the feedback dialog behind Dislike and /feedback with its
